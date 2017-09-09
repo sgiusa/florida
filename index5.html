@@ -162,40 +162,23 @@ map.on('load', function() {
     // Add a layer showing the state polygons.
 
 
+    map.on('click', function(e) {
+      var features = map.queryRenderedFeatures(e.point, {
+        layers: ['unclustered-point'] // replace this with the name of the layer
+      });
 
-    map.addLayer({
-        'id': 'homes',
-        'type': 'symbol',
-        'source': {
-            'type': 'geojson',
-            'data': 'https://raw.githubusercontent.com/sgiusa/florida/master/flordiamembers.geojson'
-        },
-        'paint': {
-            'fill-color': 'rgba(200, 100, 240, 0.4)',
-            'fill-outline-color': 'rgba(200, 100, 240, 1)'
-        }
+      if (!features.length) {
+        return;
+      }
+
+      var feature = features[0];
+
+      var popup = new mapboxgl.Popup({ offset: [0, -15] })
+        .setLngLat(feature.geometry.coordinates)
+        .setHTML('<h3>' + feature.properties.Summary + '</h3>')
+        .setLngLat(feature.geometry.coordinates)
+        .addTo(map);
     });
-
-    // When a click event occurs on a feature in the states layer, open a popup at the
-    // location of the click, with description HTML from its properties.
-    map.on('click', 'homes', function (e) {
-        new mapboxgl.Popup()
-            .setLngLat(e.lngLat)
-            .setHTML('hello')
-            .addTo(map);
-    });
-
-    // Change the cursor to a pointer when the mouse is over the states layer.
-    map.on('mouseenter', 'homes', function () {
-        map.getCanvas().style.cursor = 'pointer';
-    });
-
-    // Change it back to a pointer when it leaves.
-    map.on('mouseleave', 'homes', function () {
-        map.getCanvas().style.cursor = '';
-    });
-
-
 });
 </script>
 
