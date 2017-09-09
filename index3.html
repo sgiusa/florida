@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<!-- Head -->
+  <head>
+  <!-- Meta and Template-type set -->
+    <meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+<title>Hurricane Tracker - WSJ.com</title>
+
+<!-- H&Co Gziped Fonts -->
+<link rel="stylesheet" type="text/css" href="//fonts.wsj.net/fonts/wsj-fonts.css"/>
+
+<link rel="stylesheet" href="//graphics.wsj.com/libs/css/bootstrap/3.3.2/bootstrap.min.css">
+<link rel="stylesheet" href="//graphics.wsj.com/libs/css/wsj/jquery.socialriser/1.6.0/jquery.socialriser.css"/>
+<link rel="stylesheet" href="//graphics.wsj.com/libs/css/wsj-iconography/1.0/wsj-iconography.css"/>
+
+    <!-- Your CSS file(s) build -->
+      <link rel="stylesheet" href="css/styles.css"/>
+  </head>
+
+
+<!-- Body -->
+  <body class="template-embed ">
+
+    <div id="main-wrapper">
+      <link href="//graphics.wsj.com/libs/css/wsj/php.headerfooter/1.0.0/modern_global.css" rel="stylesheet" />
+
+
+<div class="top-header-wrapper">
+    <div class="top-header">
+    <div class="top-header-content">
+      <div id="top-menu"></div>
+      <div id="top-close" class="top-close"></div>
+      <a href="//www.wsj.com" id="wsj-link"></a>
+      <div id="top-share">
+        <div id="top-share-button"></div>
+        <div class="social-links"></div>
+      </div>
+    </div>
+  </div>
+    <!-- <div class="top-header-menu">
+    <div id="top-close" class="top-close"></div>
+    <div id="top-menu-label">Sections</div>
+  </div> -->
+    <div id="top-menu-container">
+  </div>
+  <div id="top-menu-screen"></div>
+  <div id="top-share-container">
+    <div id="top-share-close" class="top-close"></div>
+    <div class="top-share-item top-share-facebook"><a href="//www.facebook.com/sharer.php?s=100&p[url]=http://www.wsj.com/graphics/hurricane-map/" onclick="share(this.href);return false;">Facebook</a></div>
+    <div class="top-share-item top-share-twitter"><a href="https://twitter.com/share?url=http://www.wsj.com/graphics/hurricane-map/&text=Hurricane Tracker" onclick="share(this.href);return false;">Twitter</a></div>
+    <div class="top-share-item top-share-email"><a href="">Email</a></div>
+    <div class="top-share-item top-share-cancel"><a href="#">Cancel</a></div>
+  </div>
+  <div id="top-share-screen"></div>
+</div><!-- /.top-header-wrapper -->
+
+      <main>
+      <!-- Header -->
+      <header class="row">
+        <!-- Splash-Image -->
+        <div class="splash-image"></div>
+
+        <!-- Crown -->
+        <img class="crown" src="//g.wsj.net/hurricane-map/img/default_crown.png" alt="">
+
+        <!-- Header-Text -->
+        <div class="header-text">
+
+          <!-- Headline -->
+          <h1 class="headline">Hurricane Tracker</h1>
+
+          <!-- Deck -->
+          <h2 class="deck">Track storms as they travel through the Pacific and Atlantic Oceans</h2>
+
+        </div>
+      </header>
+
+      <!-- Content Wrapper -->
+      <article class="content-wrapper">
+        <div class="wsj-map-controls">
+          <div class="wsj-map-control wsj-key">
+            <div class="wsj-row maplegend">
+              <div class="wsj-box-container">
+                <div class="wsj-box label">Trop. storms</div>
+                <div class="color-boxes-wrapper">
+                  <div style="background-color:#eff3f6" class="wsj-box color"></div>
+                  <div style="background-color:#ffd597" class="wsj-box color"></div>
+                  <div style="background-color:#f4bb60" class="wsj-box color"></div>
+                </div>
+              </div>
+              <div class="wsj-box-container">
+                <div class="wsj-box label first">Hurricane cat.</div>
+                <div class="color-boxes-wrapper">
+                  <div style="background-color:#fc7a70" class="wsj-box color">1</div>
+                  <div style="background-color:#cc3233" class="wsj-box color">2</div>
+                  <div style="background-color:#A7262A" class="wsj-box color">3</div>
+                  <div style="background-color:#874E99" class="wsj-box color">4</div>
+                  <div style="background-color:#4e2b70" class="wsj-box color">5</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="mapid"></div>
+
+      </article>
+    </main>
+      <!-- Social Links for template-embed -->
+       <div class="social-links"></div>
+    <link href="//graphics.wsj.com/libs/css/wsj/php.headerfooter/1.0.0/modern_global.css" rel="stylesheet" />
+
+    <!-- Scripts -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone-with-data-2012-2022.min.js"></script>
+    <script type="text/javascript" src="//graphics.wsj.com/libs/js/wsj/FrameMessenger/0.0.1/framemessenger.js"></script>
+    <script type="text/javascript"
+            id="framemessenger_graphics"
+            data-frame-name="hurricane-map"
+            data-root-element="#main-wrapper"
+            src="//graphics.wsj.com/libs/js/wsj/FrameMessenger/0.0.1/framemessenger_graphics.js">
+            </script>
+
+
+    <!-- Parse.ly Tracking -->
+    <script type="application/ld+json">
+       {
+         "@context": "http://schema.org",
+         "@type": "NewsArticle",
+         "headline": "Hurricane Tracker",
+         "url": "http://www.wsj.com/graphics/hurricane-map/",
+         "thumbnailUrl": "",
+         "dateCreated": "2016-08-15T14:46:44",
+         "articleSection": "Interactives",
+         "creator": ["WSJ Graphics"],
+         "keywords": ["hurricane","tracker","Atlantic","Pacific","Ocean","typhoon","depression","tropical","landfall"]       }
+    </script>
+
+    <!-- More Scripts -->
+    <script src="//graphics.wsj.com/libs/js/bootstrap/3.2.0/bootstrap.min.js"></script>
+    <script src="//graphics.wsj.com/libs/js/wsj/jquery.socialriser/1.6.0/jquery.socialriser.min.js"></script>
+    <script src="//graphics.wsj.com/libs/js/wsj/wsj-template/1.3.0/common.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.min.js"></script>
+    <script type="text/javascript" src="//unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+
+
+    <!-- Your Script Libraries Build -->
+    <script type="text/javascript" src="//g.wsj.net/hurricane-map/js/_libs/underscore-min.js"></script>
+    <script src="js/library.js"></script>
+    <script src="js/cluster.js"></script>
+
+    <!-- Your Script Files Build -->
+
+    <script src="js/markers.js"></script>
+
+    <!-- ChartBeat Script (Realtime Analytics)-->
+    <script type="text/javascript">
+      (function(a,b,c,d){
+      a='//tags.tiqcdn.com/utag/wsjdn/newsgraphics/prod/utag.js';
+      b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;
+      a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);
+      })();
+    </script>
+  </body>
+</html>
