@@ -8,17 +8,28 @@
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.css' rel='stylesheet' />
     <style>
     body { margin:0; padding:0; }
-    h2, h3 {
+    h2, h3, h4 {
         margin: 10px;
         font-size: 1.2em;
     }
     h3 {
         font-size: 1em;
     }
+    h4 {
+        font-size: .9em;
+    }
     p {
         font-size: 0.85em;
         margin: 10px;
         text-align: left;
+    }
+    ul li{
+        margin-bottom: 5px;
+    }
+    ul{
+        list-style: none;
+        margin-left: 10px;
+        padding-left: 0px;
     }
     #map { position:absolute; top:0; bottom:0; width:100%; }
      .map-overlay {
@@ -221,7 +232,7 @@ map.on('load', function() {
       });
 
       if (states.length > 0) {
-        document.getElementById('pd').innerHTML = '<h3><strong>' + states[0].properties.FullName + '</strong></h3><ul><li>' + states[0].properties.Phone + '</li><br><li>' + states[0].properties.Region + ', ' + states[0].properties.Chapter +', ' + states[0].properties.District +'</li><li>'+ states[0].properties.Division + '</li></ul>';
+        document.getElementById('pd').innerHTML = '<h3 style="margin-botton: 0px;"><strong>' + states[0].properties.FullName + '</strong></h3><h4>' + states[0].properties.Phone + '</h4><ul><li>' + states[0].properties.Region + ', ' + states[0].properties.Chapter +', ' + states[0].properties.District +'</li><li>'+ states[0].properties.Division + '</li></ul>';
       } else {
         document.getElementById('pd').innerHTML = '<p>Hover over a state!</p>';
       }
