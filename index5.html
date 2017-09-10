@@ -11,9 +11,16 @@
         #map { position:absolute; top:0; bottom:0; width:100%; }
     </style>
     <style>
+    .mapboxgl-popup-content h3{
+        margin: 0px;
+        padding: 10px;
+    }
+    .mapboxgl-popup h4{
+        margin: 0px;
+    }
     .mapboxgl-popup {
         max-width: 400px;
-        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        font: 10px/16px 'Helvetica Neue', Arial, Helvetica, sans-serif;
     }
 </style>
 </head>
@@ -67,7 +74,7 @@ map.on('load', function() {
         type: "geojson",
         // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
         // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
-        data: "https://raw.githubusercontent.com/sgiusa/florida/master/flordiamembers.geojson",
+        data: "https://raw.githubusercontent.com/sgiusa/florida/master/g.geojson",
          cluster: true,
         clusterMaxZoom: 14, // Max zoom to cluster points on
         clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
@@ -100,22 +107,18 @@ map.on('load', function() {
         }
     });
 
-
-
     map.addLayer({
         id: "unclustered-point",
         type: "circle",
         source: "earthquakes",
         filter: ["!has", "point_count"],
         paint: {
-            "circle-color": "#11b4da",
-            "circle-radius": 3,
-            "circle-stroke-width": 1,
+            "circle-color": "#4da11b",
+            "circle-radius": 8,
+            "circle-stroke-width": 5,
             "circle-stroke-color": "#fff"
         }
     });
-
-
 
     map.addLayer({
         id: "cluster-count",
@@ -128,39 +131,24 @@ map.on('load', function() {
             "text-size": 10
         }
     });
-    // map.addLayer({
-    //     "id": "route",
-    //     "type": "line",
-    //     "source": {
-    //         "type": "geojson",
-    //         "data": {
-    //             "type": "Feature",
-    //             "properties": {},
-    //             "geometry": {
-    //                 "type": "LineString",
-    //                 "coordinates": [
-    //                     [-82.95828,30.650979],
-    //                     [-81.334327,25.664818],
-    //                     [-80.817819,24.27016],
-    //                     [-79.828573,22.886244],
-    //                     [-78.264797,22.409713],
-    //                     [-77.444954,22.198957]
-    //                 ]
-    //             }
-    //         }
-    //     },
-    //     "layout": {
-    //         "line-join": "round",
-    //         "line-cap": "round"
-    //     },
-    //     "paint": {
-    //         "line-color": "#888",
-    //         "line-width": 8
-    //     }
-    // });
 
-    // Add a layer showing the state polygons.
+    map.on('touch', function(e) {
+      var features = map.queryRenderedFeatures(e.point, {
+        layers: ['unclustered-point'] // replace this with the name of the layer
+      });
 
+      if (!features.length) {
+        return;
+      }
+
+      var feature = features[0];
+
+      var popup = new mapboxgl.Popup({ offset: [0, -15] })
+        .setLngLat(feature.geometry.coordinates)
+        .setHTML('<h3>' + feature.properties.Summary + '</h3>')
+        .setLngLat(feature.geometry.coordinates)
+        .addTo(map);
+    });
 
     map.on('click', function(e) {
       var features = map.queryRenderedFeatures(e.point, {
@@ -176,6 +164,42 @@ map.on('load', function() {
       var popup = new mapboxgl.Popup({ offset: [0, -15] })
         .setLngLat(feature.geometry.coordinates)
         .setHTML('<h3>' + feature.properties.Summary + '</h3>')
+        .setLngLat(feature.geometry.coordinates)
+        .addTo(map);
+    });
+
+    map.on('touch', function(e) {
+      var features = map.queryRenderedFeatures(e.point, {
+        layers: ['clusters'] // replace this with the name of the layer
+      });
+
+      if (!features.length) {
+        return;
+      }
+
+      var feature = features[0];
+
+      var popup = new mapboxgl.Popup({ offset: [0, -15] })
+        .setLngLat(feature.geometry.coordinates)
+        .setHTML('<h3>' + feature.properties.Summary + '</h3>')
+        .setLngLat(feature.geometry.coordinates)
+        .addTo(map);
+    });
+
+    map.on('click', function(e) {
+      var features = map.queryRenderedFeatures(e.point, {
+        layers: ['clusters'] // replace this with the name of the layer
+      });
+
+      if (!features.length) {
+        return;
+      }
+
+      var feature = features[0];
+
+      var popup = new mapboxgl.Popup({ offset: [0, -15] })
+        .setLngLat(feature.geometry.coordinates)
+        .setHTML('<h4>Scroll closer until you see the Green dots.</h4>')
         .setLngLat(feature.geometry.coordinates)
         .addTo(map);
     });
