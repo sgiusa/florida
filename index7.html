@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+    <style>
+    .mapboxgl-popup-content h3{
+        margin: 0px;
+        padding: 10px;
+        white-space: pre;
+    }
+    .mapboxgl-popup h4{
+        margin: 0px;
+    }
+    .mapboxgl-popup {
+        max-width: 400px;
+        font: 10px/16px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    }
+</style>
+</head>
+<body>
+
+<div id='map'></div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoibGtiZ2lmdCIsImEiOiJjajdjb2ZpYzIwMGVuMnducDlhcjYzY3gwIn0.9UGqW2wVmH5-vmSWhnLujA';
+var map = new mapboxgl.Map({
+    style: 'mapbox://styles/mapbox/light-v9',
+    center: [-80.495, 26.452],
+    zoom: 7,
+    pitch: 0,
+    bearing: 0,
+    hash: true,
+    container: 'map'
+});
+
+// The 'building' layer in the mapbox-streets vector source contains building-height
+// data from OpenStreetMap.
+map.on('load', function() {
+    // Insert the layer beneath any symbol layer.
+    var layers = map.getStyle().layers.reverse();
+    var labelLayerIdx = layers.findIndex(function (layer) {
+        return layer.type !== 'symbol';
+    });
+    var labelLayerId = labelLayerIdx !== -1 ? layers[labelLayerIdx].id : undefined;
+
+    map.addSource("earthquakes", {
+        type: "geojson",
+        // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
+        // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
+        data: "g-called.geojson",
+        clusterMaxZoom: 20, // Max zoom to cluster points on
+        clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+    });
+
+
+    map.addLayer({
+        id: "unclustered-point",
+        type: "circle",
+        source: "earthquakes",
+        filter: ["!has", "point_count"],
+        paint: {
+            "circle-color": "#fff",
+            "circle-radius": 4,
+            "circle-stroke-width": 4,
+            "circle-stroke-color": "#fff"
+        }
+    });
+
+    map.addLayer({
+        id: "unclustered-point-notcalled",
+        type: "circle",
+        source: "earthquakes",
+        filter: ['==', 'CalledStatus', 'Not called'],
+        paint: {
+            "circle-color": "#b0a",
+            "circle-radius": 3,
+            "circle-stroke-width": 1,
+            "circle-stroke-color": "#fff"
+        }
+    });
+
+
+    map.addLayer({
+        id: "unclustered-point-vm",
+        type: "circle",
+        source: "earthquakes",
+        filter: ['==', 'CalledStatus', 'Left voicemail'],
+        paint: {
+            "circle-color": "#ed1",
+            "circle-radius": 4,
+            "circle-stroke-width": 1,
+            "circle-stroke-color": "#fff"
+        }
+    });
+
+
+    map.addLayer({
+        id: "unclustered-point-reached",
+        type: "circle",
+        source: "earthquakes",
+        filter: ['==', 'CalledStatus', 'Reached'],
+        paint: {
+            "circle-color": "#2a1",
+            "circle-radius": 5,
+            "circle-stroke-width": 1,
+            "circle-stroke-color": "#fff"
+        }
+    });
+
+
+    map.on('click', function(e) {
+      var features = map.queryRenderedFeatures(e.point, {
+        layers: ['unclustered-point', 'unclustered-point-reached', 'unclustered-point-vm', 'unclustered-point-notcalled'] // replace this with the name of the layer
+      });
+
+      if (!features.length) {
+        return;
+      }
+
+      var feature = features[0];
+
+      var popup = new mapboxgl.Popup({ offset: [0, -15] })
+        .setLngLat(feature.geometry.coordinates)
+        .setHTML('<h3>' + feature.properties.Name + '</h3>')
+        .setLngLat(feature.geometry.coordinates)
+        .addTo(map);
+    });
+
+    map.on('click', function(e) {
+      var features = map.queryRenderedFeatures(e.point, {
+        layers: ['unclustered-point'] // replace this with the name of the layer
+      });
+
+      if (!features.length) {
+        return;
+      }
+
+      var feature = features[0];
+
+      var popup = new mapboxgl.Popup({ offset: [0, -15] })
+        .setLngLat(feature.geometry.coordinates)
+        .setHTML('<h3>' + feature.properties.Name + '</h3>')
+        .setLngLat(feature.geometry.coordinates)
+        .addTo(map);
+    });
+});
+</script>
+
+</body>
+</html>
