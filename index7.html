@@ -7,10 +7,52 @@
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.css' rel='stylesheet' />
     <style>
-        body { margin:0; padding:0; }
-        #map { position:absolute; top:0; bottom:0; width:100%; }
-    </style>
-    <style>
+    body { margin:0; padding:0; }
+    h2, h3 {
+        margin: 10px;
+        font-size: 1.2em;
+    }
+    h3 {
+        font-size: 1em;
+    }
+    p {
+        font-size: 0.85em;
+        margin: 10px;
+        text-align: left;
+    }
+    #map { position:absolute; top:0; bottom:0; width:100%; }
+     .map-overlay {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.8);
+        margin-right: 20px;
+        font-family: Arial, sans-serif;
+        overflow: auto;
+        border-radius: 3px;
+    }
+
+    #features {
+        top: 0;
+        height: 180px;
+        margin-top: 20px;
+        width: 250px;
+    }
+    #legend {
+        padding: 10px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.10);
+        line-height: 18px;
+        height: 60px;
+        margin-bottom: 40px;
+        width: 100px;
+    }
+    .legend-key {
+        display:inline-block;
+        border-radius: 20%;
+        width: 10px;
+        height: 10px;
+        margin-right: 5px;
+    }
     .mapboxgl-popup-content h3{
         margin: 0px;
         padding: 10px;
@@ -28,6 +70,10 @@
 <body>
 
 <div id='map'></div>
+
+<div class='map-overlay' id='features'><h2>Florida Zone Members</h2><div id='pd'><p>Hover over a state!</p></div></div>
+<div class='map-overlay' id='legend'></div>
+
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoibGtiZ2lmdCIsImEiOiJjajdjb2ZpYzIwMGVuMnducDlhcjYzY3gwIn0.9UGqW2wVmH5-vmSWhnLujA';
 var map = new mapboxgl.Map({
@@ -39,6 +85,24 @@ var map = new mapboxgl.Map({
     hash: true,
     container: 'map'
 });
+
+var layers = ["Contacted", "Left VM", "Not Called"];
+var colors = ['#2a1', '#ed1', '#b0a'];
+
+for (i = 0; i < layers.length; i++) {
+  var layer = layers[i];
+  var color = colors[i];
+  var item = document.createElement('div');
+  var key = document.createElement('span');
+  key.className = 'legend-key';
+  key.style.backgroundColor = color;
+
+  var value = document.createElement('span');
+  value.innerHTML = layer;
+  item.appendChild(key);
+  item.appendChild(value);
+  legend.appendChild(item);
+}
 
 // The 'building' layer in the mapbox-streets vector source contains building-height
 // data from OpenStreetMap.
@@ -54,7 +118,7 @@ map.on('load', function() {
         type: "geojson",
         // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
         // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
-        data: "g-called.geojson",
+        data: "https://raw.githubusercontent.com/sgiusa/florida/master/g-called.geojson",
         clusterMaxZoom: 20, // Max zoom to cluster points on
         clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
     });
@@ -67,8 +131,8 @@ map.on('load', function() {
         filter: ["!has", "point_count"],
         paint: {
             "circle-color": "#fff",
-            "circle-radius": 4,
-            "circle-stroke-width": 4,
+            "circle-radius": 3,
+            "circle-stroke-width": 2,
             "circle-stroke-color": "#fff"
         }
     });
@@ -108,47 +172,59 @@ map.on('load', function() {
         filter: ['==', 'CalledStatus', 'Reached'],
         paint: {
             "circle-color": "#2a1",
-            "circle-radius": 5,
+            "circle-radius": 4,
             "circle-stroke-width": 1,
             "circle-stroke-color": "#fff"
         }
     });
 
 
-    map.on('click', function(e) {
-      var features = map.queryRenderedFeatures(e.point, {
-        layers: ['unclustered-point', 'unclustered-point-reached', 'unclustered-point-vm', 'unclustered-point-notcalled'] // replace this with the name of the layer
+    // map.on('click', function(e) {
+    //   var features = map.queryRenderedFeatures(e.point, {
+    //     layers: ['unclustered-point', 'unclustered-point-reached', 'unclustered-point-vm', 'unclustered-point-notcalled'] // replace this with the name of the layer
+    //   });
+
+    //   if (!features.length) {
+    //     return;
+    //   }
+
+    //   var feature = features[0];
+
+    //   var popup = new mapboxgl.Popup({ offset: [0, -15] })
+    //     .setLngLat(feature.geometry.coordinates)
+    //     .setHTML('<h3>' + feature.properties.Name + '</h3>')
+    //     .setLngLat(feature.geometry.coordinates)
+    //     .addTo(map);
+    // });
+
+    // map.on('click', function(e) {
+    //   var features = map.queryRenderedFeatures(e.point, {
+    //     layers: ['unclustered-point'] // replace this with the name of the layer
+    //   });
+
+    //   if (!features.length) {
+    //     return;
+    //   }
+
+    //   var feature = features[0];
+
+    //   var popup = new mapboxgl.Popup({ offset: [0, -15] })
+    //     .setLngLat(feature.geometry.coordinates)
+    //     .setHTML('<h3>' + feature.properties.Name + '</h3>')
+    //     .setLngLat(feature.geometry.coordinates)
+    //     .addTo(map);
+    // });
+
+    map.on('mousemove', function(e) {
+      var states = map.queryRenderedFeatures(e.point, {
+        layers: ['unclustered-point']
       });
 
-      if (!features.length) {
-        return;
+      if (states.length > 0) {
+        document.getElementById('pd').innerHTML = '<h3><strong>' + states[0].properties.FullName + '</strong></h3><ul><li>' + states[0].properties.Phone + '</li><br><li>' + states[0].properties.Region + ', ' + states[0].properties.Chapter +', ' + states[0].properties.District +'</li><li>'+ states[0].properties.Division + '</li></ul>';
+      } else {
+        document.getElementById('pd').innerHTML = '<p>Hover over a state!</p>';
       }
-
-      var feature = features[0];
-
-      var popup = new mapboxgl.Popup({ offset: [0, -15] })
-        .setLngLat(feature.geometry.coordinates)
-        .setHTML('<h3>' + feature.properties.Name + '</h3>')
-        .setLngLat(feature.geometry.coordinates)
-        .addTo(map);
-    });
-
-    map.on('click', function(e) {
-      var features = map.queryRenderedFeatures(e.point, {
-        layers: ['unclustered-point'] // replace this with the name of the layer
-      });
-
-      if (!features.length) {
-        return;
-      }
-
-      var feature = features[0];
-
-      var popup = new mapboxgl.Popup({ offset: [0, -15] })
-        .setLngLat(feature.geometry.coordinates)
-        .setHTML('<h3>' + feature.properties.Name + '</h3>')
-        .setLngLat(feature.geometry.coordinates)
-        .addTo(map);
     });
 });
 </script>
